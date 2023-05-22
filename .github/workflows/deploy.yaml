@@ -1,0 +1,34 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  HUGO_VERSION: 0.111.3
+  HUGO_ENVIRONMENT: production
+  HUGO_ENV: production
+  HUGO_BASE_URL: ${{ secrets.SUBDOMAIN_NAME }}.${{ secrets.HOSTED_ZONE_NAME }}
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment: public
+
+    steps:
+      - uses: ./.github/actions/setup-hugo
+
+      - uses: actions/checkout@v3
+
+      - run: hugo --gc --minify --baseURL ${{ env.HUGO_BASE_URL }}
+
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_DIFF_ROLE_ARN }}
+          role-session-name: ${{ github.triggering_actor }}-${{ github.event.repository.name }}-${{ github.job }}-${{ github.run_id }}
+          role-skip-session-tagging: true
+          role-duration-seconds: 3600
+
+      - run: npm run diff:ci

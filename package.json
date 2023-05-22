@@ -1,0 +1,27 @@
+{
+  "name": "blog",
+  "scripts": {
+    "deploy": "cdk deploy",
+    "diff": "cdk diff",
+    "diff:ci": "npm run diff -- --ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hans-m-song/blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hans-m-song/blog/issues"
+  },
+  "homepage": "https://github.com/hans-m-song/blog#readme",
+  "dependencies": {
+    "@types/source-map-support": "^0.5.6",
+    "aws-cdk": "^2.80.0",
+    "aws-cdk-lib": "^2.80.0",
+    "dotenv": "^16.0.3",
+    "source-map-support": "^0.5.21",
+    "tsx": "^3.12.7"
+  }
+}

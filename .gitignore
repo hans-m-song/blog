@@ -1,0 +1,8 @@
+node_modules
+public
+resources
+cdk.out
+
+.DS_Store
+.hugo_build.lock
+.env
