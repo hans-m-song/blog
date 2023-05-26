@@ -17,9 +17,9 @@ jobs:
     environment: public
 
     steps:
-      - uses: ./.github/actions/setup-hugo
-
       - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/setup-hugo
 
       - run: make build
 
