@@ -11,6 +11,10 @@ env:
   HUGO_ENV: production
   HUGO_BASE_URL: ${{ secrets.SUBDOMAIN_NAME }}.${{ secrets.HOSTED_ZONE_NAME }}
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     runs-on: self-hosted

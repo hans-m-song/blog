@@ -11,6 +11,10 @@ on:
           - content
           - all
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     runs-on: self-hosted
