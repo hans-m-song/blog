@@ -37,5 +37,5 @@ runs:
 
     - shell: bash
       run: |
-        wget -O ${{ runner.temp }}/hugo.deb ${{ steps.get-release.outputs.download-url }} \
+        curl -Lo ${{ runner.temp }}/hugo.deb ${{ steps.get-release.outputs.download-url }} \
         && sudo dpkg -i ${{ runner.temp }}/hugo.deb
