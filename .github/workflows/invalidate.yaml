@@ -1,15 +1,15 @@
-name: Deploy
+name: Invalidate
 
 on:
-  push:
-    branches:
-      - master
-
-env:
-  HUGO_VERSION: 0.111.3
-  HUGO_ENVIRONMENT: production
-  HUGO_ENV: production
-  HUGO_BASE_URL: ${{ secrets.SUBDOMAIN_NAME }}.${{ secrets.HOSTED_ZONE_NAME }}
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: What to invalidate - "content" or "all"
+        default: content
+        type: choice
+        options:
+          - content
+          - all
 
 jobs:
   deploy:
@@ -17,12 +17,6 @@ jobs:
     environment: public
 
     steps:
-      - uses: ./.github/actions/setup-hugo
-
-      - uses: actions/checkout@v3
-
-      - run: make build
-
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -35,4 +29,4 @@ jobs:
 
       - uses: ./.github/actions/invalidate-cloudfront
         with:
-          mode: content
+          mode: ${{ inputs.mode }}

@@ -28,7 +28,7 @@ runs:
             tag: .tag_name,
             created_at: .created_at,
             name: .name,
-            assets: [ .assets[] | select(.name | endswith("linux-amd64.deb") and (contains("extended") | not))]
+            assets: [.assets[] | select(.name | endswith("linux-amd64.deb") and contains("extended"))]
           }'
         )
 

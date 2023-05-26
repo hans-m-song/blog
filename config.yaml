@@ -1,0 +1,44 @@
+baseURL: https://blog.hsong.me/
+languageCode: en-us
+defaultContentLanguage: en
+title: Hans Song
+uglyURLs: false
+
+theme: ficurinia
+author: Hans Song
+copyright: Hans Song - [GitHub](https://github.com/hans-m-song) - [LinkedIn](https://www.linkedin.com/in/hans-song/)
+
+params:
+  description: Hans's blog
+  author: Hans Song
+  paperCards: false
+  buttonTags: true
+  tagsInArticleTitle: true
+  gridView: false
+  bigArticleTitle: false
+  navtype: standard
+  enableShadow: true
+  menuStyle: standard
+  inputStyle: standard
+  enableSearch: true
+  searchbarEverywhere: true
+  searchMenuLink: false
+  mobileHamburgerNav: true
+  enableFeatured: false
+  underlineTitleLinks: false
+
+menu:
+  icons:
+    - identifier: github
+      name: GitHub
+      url: https://github.com/hans-m-song
+      weight: 10
+    - identifier: linkedin
+      name: LinkedIn
+      url: https://www.linkedin.com/in/hans-song/
+      weight: 10
+
+outputs:
+  home:
+    - HTML
+    - RSS

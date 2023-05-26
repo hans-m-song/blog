@@ -2,6 +2,7 @@
   "name": "blog",
   "scripts": {
     "deploy": "cdk deploy",
+    "deploy:ci": "cdk deploy -- --ci",
     "diff": "cdk diff",
     "diff:ci": "npm run diff -- --ci"
   },

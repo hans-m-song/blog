@@ -1,7 +1,7 @@
 node_modules
 public
 resources
-cdk.out
+cdk.out*
 
 .DS_Store
 .hugo_build.lock

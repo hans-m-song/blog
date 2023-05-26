@@ -1,0 +1,52 @@
+name: Invalidate CloudFront
+description: Invalidate CloudFront
+
+inputs:
+  mode:
+    description: What to invalidate - "content" or "all"
+    default: content
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        stack=$(
+          aws cloudformation describe-stacks \
+            --stack-name BlogStack \
+            --region us-east-1
+        )
+
+        distribution_id=$(
+          echo $stack \
+          | jq -rM '.Stacks[0].Outputs[] | select(.OutputKey == "DistributionId").OutputValue'
+        )
+
+        if [[ "$distribution_id" == "" ]]; then
+          echo "::error::No distribution id found"
+          exit 1
+        fi
+
+        case "${{ inputs.mode }}" in
+        content)
+          invalidation=$(
+            aws cloudfront create-invalidation \
+              --distribution-id $distribution_id \
+              --paths "/categories/*" "/page/*" "/pages/*" "/posts/*" "/search/*" "/tags/*" "/index.html" "/index.xml" "/sitemap.xml"
+          )
+          ;;
+        all)
+          invalidation=$(
+            aws cloudfront create-invalidation \
+              --distribution-id $distribution_id \
+              --paths "/*"
+          )
+          ;;
+        *)
+          echo "::error::Invalid mode: ${{ inputs.mode }}"
+          exit 1
+          ;;
+        esac
+
+        invalidation_id=$( echo $invalidation | jq -rM '.Invalidation.Id' )
+        aws cloudfront wait invalidation-completed --distribution-id $distribution_id --id $invalidation_id
