@@ -37,9 +37,9 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: us-east-1
+          aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
-          role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository_owner }}@${{ github.job }}@${{ github.run_id }}
+          role-session-name: ${{ github.triggering_actor }}@${{ github.repository_owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
           role-skip-session-tagging: true
           role-duration-seconds: 3600
 
@@ -66,9 +66,9 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: us-east-1
+          aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
-          role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
+          role-session-name: ${{ github.triggering_actor }}@${{ github.repository_owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
           role-skip-session-tagging: true
           role-duration-seconds: 3600
 
