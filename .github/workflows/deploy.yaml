@@ -24,33 +24,25 @@ jobs:
     environment: public
 
     steps:
-      - run: |
-          whoami
-          id
-          groups
-          ls -la ${{ runner.temp }}
-          ls -la ${{ runner.tool_cache }}
-          ls -la /opt/hostedtoolcache
-
       - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: .nvmrc
 
       - uses: axatol/actions/setup-hugo@release
 
       - run: make build
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - run: npm install
+
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-          role-to-assume: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+          role-to-assume: ${{ secrets.AWS_CDK_DEPLOY_ROLE_ARN }}
           role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
           role-skip-session-tagging: true
           role-duration-seconds: 3600
-
-      - run: npm install
 
       - run: npm run diff:ci
 

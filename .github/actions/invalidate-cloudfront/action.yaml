@@ -9,6 +9,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-to-assume: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+        role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
+        role-skip-session-tagging: true
+        role-duration-seconds: 3600
+
     - shell: bash
       id: describe
       run: |
@@ -29,6 +37,14 @@ runs:
           echo "::error::No distribution id found"
           exit 1
         fi
+
+    - uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-to-assume: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
+        role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
+        role-skip-session-tagging: true
+        role-duration-seconds: 3600
 
     - shell: bash
       id: invalidate
