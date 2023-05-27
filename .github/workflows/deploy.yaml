@@ -46,9 +46,10 @@ jobs:
 
       - run: npm run diff:ci
 
-      - uses: ./.github/actions/invalidate-cloudfront
-        with:
-          mode: content
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-          lookup-diff-role-arn: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
-          invalidator-role-arn: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
+  invalidate:
+    needs: deploy
+
+    uses: ./.github/workflows/invalidate.yaml
+    secrets:
+      AWS_CDK_DIFF_ROLE_ARN: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+      AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}

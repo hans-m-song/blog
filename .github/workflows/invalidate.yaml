@@ -1,10 +1,22 @@
 name: Invalidate
 
 on:
+  workflow_call:
+    secrets:
+      AWS_CDK_DIFF_ROLE_ARN:
+        required: true
+      AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN:
+        required: true
+    inputs:
+      mode:
+        description: What to invalidate
+        default: content
+        type: string
+
   workflow_dispatch:
     inputs:
       mode:
-        description: What to invalidate - "content" or "all"
+        description: What to invalidate
         default: content
         type: choice
         options:
@@ -23,9 +35,86 @@ jobs:
     environment: public
 
     steps:
-      - uses: ./.github/actions/invalidate-cloudfront
+      - uses: aws-actions/configure-aws-credentials@v2
         with:
-          mode: ${{ inputs.mode }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-          lookup-diff-role-arn: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
-          invalidator-role-arn: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+          role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository_owner }}@${{ github.job }}@${{ github.run_id }}
+          role-skip-session-tagging: true
+          role-duration-seconds: 3600
+
+      - shell: bash
+        id: describe
+        run: |
+          stack=$(
+            aws cloudformation describe-stacks \
+              --stack-name BlogStack \
+              --region us-east-1
+          )
+
+          distribution_id=$(
+            echo $stack \
+            | jq -rM '.Stacks[0].Outputs[] | select(.OutputKey == "DistributionId").OutputValue'
+          )
+
+          echo "distribution_id=$distribution_id" >> $GITHUB_OUTPUT
+
+          if [[ "$distribution_id" == "" ]]; then
+            echo "::error::No distribution id found"
+            exit 1
+          fi
+
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
+          role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
+          role-skip-session-tagging: true
+          role-duration-seconds: 3600
+
+      - shell: bash
+        id: invalidate
+        run: |
+          case "${{ inputs.mode }}" in
+          posts)
+            invalidation=$(
+              aws cloudfront create-invalidation \
+                --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+                --paths "/categories/*" "/posts/*" "/search/*" "/tags/*" "/index.html" "/index.xml" "/sitemap.xml"
+            )
+            ;;
+          pages)
+            invalidation=$(
+              aws cloudfront create-invalidation \
+                --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+                --paths "/categories/*" "/page/*" "/pages/*" "/search/*" "/index.html" "/index.xml" "/sitemap.xml"
+            )
+            ;;
+          content)
+            invalidation=$(
+              aws cloudfront create-invalidation \
+                --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+                --paths "/categories/*" "/page/*" "/pages/*" "/posts/*" "/search/*" "/tags/*" "/index.html" "/index.xml" "/sitemap.xml"
+            )
+            ;;
+          all)
+            invalidation=$(
+              aws cloudfront create-invalidation \
+                --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+                --paths "/*"
+            )
+            ;;
+          *)
+            echo "::error::Invalid mode: ${{ inputs.mode }}"
+            exit 1
+            ;;
+          esac
+
+          invalidation_id=$( echo $invalidation | jq -rM '.Invalidation.Id' )
+          echo "invalidation_id=$invalidation_id" >> $GITHUB_OUTPUT
+
+      - shell: bash
+        run: |
+          aws cloudfront wait invalidation-completed \
+            --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+            --id ${{ steps.invalidate.outputs.invalidation_id }}
