@@ -36,7 +36,6 @@ permissions:
 jobs:
   invalidate:
     runs-on: self-hosted
-    environment: public
 
     steps:
       - uses: aws-actions/configure-aws-credentials@v2
@@ -53,6 +52,7 @@ jobs:
         run: |
           distribution_id=$(
             aws ssm get-parameter \
+              --region us-east-1 \
               --name /infrastructure/cloudfront/${{ env.DOMAIN_NAME }}/distribution_id \
               --query 'Parameter.Value' \
               --output text
