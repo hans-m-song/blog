@@ -22,6 +22,9 @@ jobs:
 
     steps:
       - run: |
+          whoami
+          id
+          groups
           ls -la ${{ runner.temp }}
           ls -la ${{ runner.tool_cache }}
           ls -la /opt/hostedtoolcache
