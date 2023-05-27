@@ -51,5 +51,5 @@ runs:
       run: |
         mkdir -p ${{ runner.temp }}/hugo \
         && curl -Lo ./hugo.tar.gz ${{ steps.get-release.outputs.download-url }} \
-        && tar -xzf ./hugo.tar.gz --cd ${{ runner.temp }}/hugo \
+        && tar -xzf ./hugo.tar.gz --directory ${{ runner.temp }}/hugo \
         && echo "${{ runner.temp }}/hugo" >> $GITHUB_PATH
