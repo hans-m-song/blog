@@ -3,13 +3,14 @@ description: Invalidate CloudFront
 
 inputs:
   mode:
-    description: What to invalidate - "content" or "all"
+    description: What to invalidate - "pages" or "posts" or "content" or "all"
     default: content
 
 runs:
   using: composite
   steps:
     - shell: bash
+      id: describe
       run: |
         stack=$(
           aws cloudformation describe-stacks \
@@ -22,23 +23,42 @@ runs:
           | jq -rM '.Stacks[0].Outputs[] | select(.OutputKey == "DistributionId").OutputValue'
         )
 
+        echo "distribution_id=$distribution_id" >> $GITHUB_OUTPUT
+
         if [[ "$distribution_id" == "" ]]; then
           echo "::error::No distribution id found"
           exit 1
         fi
 
+    - shell: bash
+      id: invalidate
+      run: |
         case "${{ inputs.mode }}" in
+        posts)
+          invalidation=$(
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+              --paths "/categories/*" "/posts/*" "/search/*" "/tags/*" "/index.html" "/index.xml" "/sitemap.xml"
+          )
+          ;;
+        pages)
+          invalidation=$(
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+              --paths "/categories/*" "/page/*" "/pages/*" "/search/*" "/index.html" "/index.xml" "/sitemap.xml"
+          )
+          ;;
         content)
           invalidation=$(
             aws cloudfront create-invalidation \
-              --distribution-id $distribution_id \
+              --distribution-id ${{ steps.describe.outputs.distribution_id }} \
               --paths "/categories/*" "/page/*" "/pages/*" "/posts/*" "/search/*" "/tags/*" "/index.html" "/index.xml" "/sitemap.xml"
           )
           ;;
         all)
           invalidation=$(
             aws cloudfront create-invalidation \
-              --distribution-id $distribution_id \
+              --distribution-id ${{ steps.describe.outputs.distribution_id }} \
               --paths "/*"
           )
           ;;
@@ -49,4 +69,10 @@ runs:
         esac
 
         invalidation_id=$( echo $invalidation | jq -rM '.Invalidation.Id' )
-        aws cloudfront wait invalidation-completed --distribution-id $distribution_id --id $invalidation_id
+        echo "invalidation_id=$invalidation_id" >> $GITHUB_OUTPUT
+
+    - shell: bash
+      run: |
+        aws cloudfront wait invalidation-completed \
+          --distribution-id ${{ steps.describe.outputs.distribution_id }} \
+          --id ${{ steps.invalidate.outputs.invalidation_id }}

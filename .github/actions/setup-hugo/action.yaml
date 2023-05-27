@@ -6,6 +6,10 @@ inputs:
     description: Target release tag
     required: false
     default: latest
+  arch:
+    description: Target build architecture
+    required: false
+    default: linux-amd64
 
 outputs:
   tag:
@@ -28,7 +32,15 @@ runs:
             tag: .tag_name,
             created_at: .created_at,
             name: .name,
-            assets: [.assets[] | select(.name | endswith("linux-amd64.deb") and contains("extended"))]
+            assets: [
+              .assets[]
+              | select(
+                  .name
+                  | contains("extended")
+                    and contains("${{ inputs.arch }}")
+                    and endswith(".tar.gz")
+                )
+            ]
           }'
         )
 
@@ -37,5 +49,7 @@ runs:
 
     - shell: bash
       run: |
-        curl -Lo ${{ runner.temp }}/hugo.deb ${{ steps.get-release.outputs.download-url }} \
-        && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+        mkdir -p ${{ runner.temp }}/hugo \
+        && curl -Lo ./hugo.tar.gz ${{ steps.get-release.outputs.download-url }} \
+        && tar -xzf ./hugo.tar.gz --cd ${{ runner.temp }}/hugo \
+        && echo "${{ runner.temp }}/hugo" >> $GITHUB_PATH

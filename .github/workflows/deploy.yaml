@@ -21,6 +21,11 @@ jobs:
     environment: public
 
     steps:
+      - run: |
+          ls -la ${{ runner.temp }}
+          ls -la ${{ runner.tool_cache }}
+          ls -la /opt/hostedtoolcache
+
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
