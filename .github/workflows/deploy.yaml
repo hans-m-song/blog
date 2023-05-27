@@ -42,7 +42,7 @@ jobs:
           role-skip-session-tagging: true
           role-duration-seconds: 3600
 
-      - run: npm run diff:ci
+      - run: npm run deploy:ci
 
   invalidate:
     needs: deploy
