@@ -90,8 +90,13 @@ const distribution = new cf.Distribution(stack, "Distribution", {
   ],
 });
 
-new cdk.CfnOutput(stack, "DistributionId", {
+new cdk.CfnOutput(stack, "DistributionID", {
   value: distribution.distributionId,
+});
+
+new ssm.StringParameter(stack, "DistributionIDParameter", {
+  parameterName: `/infrastructure/cloudfront/${config.domainName}/distribution_id`,
+  stringValue: distribution.distributionId,
 });
 
 const zone = r53.HostedZone.fromHostedZoneAttributes(stack, "HostedZone", {
