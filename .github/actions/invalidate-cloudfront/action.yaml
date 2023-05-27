@@ -5,14 +5,23 @@ inputs:
   mode:
     description: What to invalidate - "pages" or "posts" or "content" or "all"
     default: content
+  aws-region:
+    description: AWS region
+    default: ap-southeast-2
+  lookup-role-arn:
+    description: AWS cdk diff role arn
+    required: true
+  invalidator-role-arn:
+    description: AWS cloudfront invalidator role arn
+    required: true
 
 runs:
   using: composite
   steps:
     - uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-        role-to-assume: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+        aws-region: ${{ inputs.aws-region }}
+        role-to-assume: ${{ inputs.lookup-role-arn }}
         role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
         role-skip-session-tagging: true
         role-duration-seconds: 3600
@@ -40,8 +49,8 @@ runs:
 
     - uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-        role-to-assume: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
+        aws-region: ${{ inputs.aws-region }}
+        role-to-assume: ${{ inputs.invalidator-role-arn }}
         role-session-name: ${{ github.triggering_actor }}@${{ github.event.repository.owner }}@${{ github.event.repository.name }}@${{ github.job }}@${{ github.run_id }}
         role-skip-session-tagging: true
         role-duration-seconds: 3600

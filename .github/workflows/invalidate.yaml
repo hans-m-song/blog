@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  invalidate:
     runs-on: self-hosted
     environment: public
 
@@ -26,3 +26,6 @@ jobs:
       - uses: ./.github/actions/invalidate-cloudfront
         with:
           mode: ${{ inputs.mode }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          lookup-diff-role-arn: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
+          invalidator-role-arn: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
