@@ -4,15 +4,16 @@ import "dotenv/config";
 import path from "path";
 import fs from "fs";
 
+import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as cdk from "aws-cdk-lib";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
-import * as s3o from "aws-cdk-lib/aws-cloudfront-origins";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as r53 from "aws-cdk-lib/aws-route53";
+import * as r53t from "aws-cdk-lib/aws-route53-targets";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3d from "aws-cdk-lib/aws-s3-deployment";
+import * as s3o from "aws-cdk-lib/aws-cloudfront-origins";
 import * as ssm from "aws-cdk-lib/aws-ssm";
-import * as acm from "aws-cdk-lib/aws-certificatemanager";
-import * as lambda from "aws-cdk-lib/aws-lambda";
 
 import { config } from "./config";
 
@@ -102,10 +103,9 @@ const zone = r53.HostedZone.fromHostedZoneAttributes(stack, "HostedZone", {
   zoneName: config.hostedZoneName,
 });
 
-new r53.CnameRecord(stack, "CnameRecord", {
+new r53.ARecord(stack, "ARecord", {
+  target: r53.RecordTarget.fromAlias(new r53t.CloudFrontTarget(distribution)),
   zone,
-  domainName: distribution.domainName,
-  recordName: config.subdomainName,
 });
 
 cdk.Tags.of(app).add("GitRepository", "https://github.com/hans-m-song/blog");

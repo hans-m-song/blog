@@ -3,7 +3,7 @@ title: "Setting Up a Hugo Blog"
 date: 2023-05-28T10:00:00+10:00
 draft: false
 toc: true
-tags: [walkthrough, hugo, aws, github-actions, cdk]
+tags: [aws, cdk, github-actions, hugo, walkthrough]
 ---
 
 I'll be walking through how I set up this blog here, fairly straightforward although there were some issues with the hosting. It appears Hugo has some custom logic to make URLs pretty that does not work well with S3.
