@@ -5,11 +5,7 @@
     "target": "ESNext",
     "strict": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
-    "baseUrl": "cdk",
-    "paths": {
-      "~/*": ["."]
-    }
+    "isolatedModules": true
   },
   "include": ["cdk"]
 }

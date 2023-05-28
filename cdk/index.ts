@@ -17,9 +17,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import { config } from "./config";
 
 const app = new cdk.App();
-const stack = new cdk.Stack(app, "BlogStack", {
-  env: { region: "us-east-1" },
-});
+const stack = new cdk.Stack(app, "BlogStack", { env: { region: "us-east-1" } });
 
 const bucket = new s3.Bucket(stack, "Bucket", {
   encryption: s3.BucketEncryption.S3_MANAGED,
