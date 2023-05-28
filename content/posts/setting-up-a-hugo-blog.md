@@ -3,7 +3,7 @@ title: "Setting Up a Hugo Blog"
 date: 2023-05-28T10:00:00+10:00
 draft: false
 toc: true
-tags: [walkthrough, hugo]
+tags: [walkthrough, hugo, aws, github-actions, cdk]
 ---
 
 I'll be walking through how I set up this blog here, fairly straightforward although there were some issues with the hosting. It appears Hugo has some custom logic to make URLs pretty that does not work well with S3.
@@ -51,7 +51,7 @@ Cloning into ...
 Hugo creates a `config.toml` file by default but I prefer to use YAML, hence, I converted the contents
 
 ```yaml
-baseURL: https://blog.hsong.me/
+baseURL: https://hsong.me/
 languageCode: en-us
 defaultContentLanguage: en
 title: Hans Song

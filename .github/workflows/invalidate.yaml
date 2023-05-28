@@ -9,8 +9,6 @@ on:
         required: true
       HOSTED_ZONE_NAME:
         required: true
-      SUBDOMAIN_NAME:
-        required: true
     inputs:
       mode:
         description: What to invalidate
@@ -47,13 +45,11 @@ jobs:
           role-duration-seconds: 3600
 
       - id: ssm
-        env:
-          DOMAIN_NAME: ${{ secrets.SUBDOMAIN_NAME }}.${{ secrets.HOSTED_ZONE_NAME }}
         run: |
           distribution_id=$(
             aws ssm get-parameter \
               --region us-east-1 \
-              --name /infrastructure/cloudfront/${{ env.DOMAIN_NAME }}/distribution_id \
+              --name /infrastructure/cloudfront/${{ secrets.HOSTED_ZONE_NAME }}/distribution_id \
               --query 'Parameter.Value' \
               --output text
           )

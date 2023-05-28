@@ -1,6 +1,9 @@
 {
   "app": "npx tsx ./cdk/index.ts",
   "context": {
-    "@aws-cdk/core:bootstrapQualifier": "toolkit"
+    "@aws-cdk/core:bootstrapQualifier": "toolkit",
+    "acknowledged-issue-numbers": [
+      25714
+    ]
   }
 }

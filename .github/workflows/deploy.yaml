@@ -10,7 +10,6 @@ env:
   HOSTED_ZONE_NAME: ${{ secrets.HOSTED_ZONE_NAME }}
   HUGO_ENV: production
   HUGO_ENVIRONMENT: production
-  SUBDOMAIN_NAME: ${{ secrets.SUBDOMAIN_NAME }}
 
 permissions:
   id-token: write
@@ -54,4 +53,3 @@ jobs:
       AWS_CDK_DIFF_ROLE_ARN: ${{ secrets.AWS_CDK_DIFF_ROLE_ARN }}
       AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN: ${{ secrets.AWS_CLOUDFRONT_INVALIDATOR_ROLE_ARN }}
       HOSTED_ZONE_NAME: ${{ secrets.HOSTED_ZONE_NAME }}
-      SUBDOMAIN_NAME: ${{ secrets.SUBDOMAIN_NAME }}
