@@ -6,7 +6,7 @@ toc: true
 tags: [aws, cdk, github-actions, hugo, walkthrough]
 ---
 
-I'll be walking through how I set up this blog here, fairly straightforward although there were some issues with the hosting. It appears Hugo has some custom logic to make URLs pretty that does not work well with S3.
+I've been told by others that I should probably get things out of my mind into text, especially all of my learnings in my platform engineering type projects. Hence, I'll be starting off by walking through how I set up this blog here, fairly straightforward although there were some issues with the hosting. It appears Hugo has some custom logic to make URLs pretty that does not work well with S3.
 
 ## Prerequisites
 
