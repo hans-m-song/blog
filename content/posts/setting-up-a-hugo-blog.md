@@ -36,7 +36,7 @@ Congratulations! Your new Hugo site is created in ...
 ...
 ```
 
-At this point you should have a skeleton repository. You can then pick a theme from the [Hugo website](https://themes.gohugo.io/). I use [Ficturina](https://gitlab.com/gabmus/hugo-ficurinia) by [Gabriele Musco](https://gabmus.org/).
+At this point you should have a skeleton repository. You can then pick a theme from the [Hugo website](https://themes.gohugo.io/). I use [Ficurinia](https://gitlab.com/gabmus/hugo-ficurinia) by [Gabriele Musco](https://gabmus.org/).
 
 ```bash
 $ git submodule add https://gitlab.com/gabmus/hugo-ficurinia.git themes/ficurinia
@@ -62,7 +62,7 @@ author: Hans Song
 copyright: Hans Song - [GitHub](https://github.com/hans-m-song) - [LinkedIn](https://www.linkedin.com/in/hans-song/)
 ```
 
-Then, add your theme specific configuration, For Ficturina, documentation is available in the [README](https://gitlab.com/gabmus/hugo-ficurinia#configuration). See my configuration [here](https://github.com/hans-m-song/blog/blob/master/config.yaml).
+Then, add your theme specific configuration, For Ficurinia, documentation is available in the [README](https://gitlab.com/gabmus/hugo-ficurinia#configuration). See my configuration [here](https://github.com/hans-m-song/blog/blob/master/config.yaml).
 
 ```yaml
 params:
@@ -76,7 +76,7 @@ menu:
 
 ## Adding content
 
-Before adding content, you can customise how new files are templated by modifying `./archetypes/default.md`
+Before adding content, you can customize how new files are templated by modifying `./archetypes/default.md`
 
 ```yaml
 ---
@@ -155,12 +155,12 @@ $ npm install aws-cdk aws-cdk-lib tsx
 $ mkdir cdk
 ```
 
-Specify your infrastructure with `./cdk/index.ts`, see [here](https://github.com/hans-m-song/blog/blob/master/cdk/index.ts) for how I did it. The jist is as follows:
+Specify your infrastructure with `./cdk/index.ts`, see [here](https://github.com/hans-m-song/blog/blob/master/cdk/index.ts) for how I did it. The summary is as follows:
 
 1. Bucket is created disallowing all public access.
 1. Site assets are uploaded into a bucket using a `BucketDeployment`.
 1. An `OriginAccessIdentity` is created and granted read only access to the aforementioned S3 bucket.
-1. CloudFront distribution is created, with default behaviour pointing to the aforementioned S3 bucket using the `OriginAccessIdentity`. Additionally, an edge lambda is created to handle the redirects that would normally be handled by the Hugo server, inspired by [this implementation](https://github.com/keaeriksson/hugo-s3-cloudfront/blob/master/template.yaml).
+1. CloudFront distribution is created, with default behavior pointing to the aforementioned S3 bucket using the `OriginAccessIdentity`. Additionally, an edge lambda is created to handle the redirects that would normally be handled by the Hugo server, inspired by [this implementation](https://github.com/keaeriksson/hugo-s3-cloudfront/blob/master/template.yaml).
 1. A CNAME is created to point to the distribution.
 1. An ACM certificate is created and associated with the distribution (see [here](https://github.com/hans-m-song/iac/blob/cdde62a9a48dd78e0878253162f5ea1471905922/aws/stacks/index.ts#L22-L25)).
 
