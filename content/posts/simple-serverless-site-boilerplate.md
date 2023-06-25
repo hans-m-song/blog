@@ -178,13 +178,43 @@ rules:
 
 ## Configuration
 
-There are some variables you will need to figure out how to introduce into your infrastructure through CDK context, environment variables, SSM, etc. The following code will be referencing these variables as though they have been imported via `./config`.
+There are some variables you will need to figure out how to introduce into your infrastructure through CDK context, environment variables, SSM, etc. The following code will be referencing the following variables
 
+- `stack` - the root stack construct
 - `certificateArn` - An ACM certificate, needs to be in the `us-east-1` region to be compatible with CloudFront.
 - `domainName` - The public facing domain name
 - `hostedZoneId`, `hostedZoneName` - The Route53 hosted zone in which the DNS record will be created. If you manage your DNS elsewhere then this can be ignored
 - `siteCompileCommand` - the command you would use to generate your site content
 - `siteOutputDirectory` - the folder in which the site content is rendered into
+
+Apart from `stack`, these variables can be introduced in many ways:
+
+- via cdk contexts
+  - set through a command line argument `--context domainName=example.com` or in `cdk.json`
+    ```json
+    {
+      "app": "npx tsx infra/index.ts",
+      "context": {
+        "domainName": "example.com"
+      }
+    }
+    ```
+  - reference with built-in context resolution
+    ```typescript
+    const domainName = stack.tryGetContext("domainName");
+    ```
+- through an SSM parameter
+  ```typescript
+  import * as ssm from "aws-cdk-lib/aws-ssm";
+  const domainName = ssm.StringParameter.valueForStringParameter(
+    stack,
+    "/path/to/domainName"
+  );
+  ```
+- through environment variables
+  ```typescript
+  const domainName = process.env.DOMAIN_NAME;
+  ```
 
 ### The static content
 
@@ -197,7 +227,7 @@ import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3d from "aws-cdk-lib/aws-s3-deployment";
 import { spawnSync } from "child_process";
 
-const bucket = new s3.Bucket(scope, {
+const bucket = new s3.Bucket(stack, {
   // the bucket should only be accessible via cloudfront
   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -205,10 +235,10 @@ const bucket = new s3.Bucket(scope, {
 });
 
 // for some reason - must explicitly grant cloudfront read permissions
-const oai = new cf.OriginAccessIdentity(scope, "OriginAccessIdentity");
+const oai = new cf.OriginAccessIdentity(stack, "OriginAccessIdentity");
 bucket.grantRead(oai);
 
-const distribution = new cf.Distribution(scope, "Distribution", {
+const distribution = new cf.Distribution(stack, "Distribution", {
   certificate: acm.Certificate.fromCertificateArn(certificateArn),
   minimumProtocolVersion: cf.SecurityPolicyProtocol.TLS_V1_2_2021,
   domainNames: [domainName],
@@ -275,10 +305,10 @@ const addRoute = (
   const name = `${method.toUpperCase()} ${path}`;
   const id = name.replace(/[^a-zA-Z0-9]+/g, "-");
   // create the handler and integration
-  const handler = new go.GoFunction(this, id, config);
+  const handler = new go.GoFunction(api, id, config);
   const integration = new api2i.HttpLambdaIntegration("Integration", handler);
   // register the integration
-  this.addRoutes({ methods: [method], path, integration });
+  api.addRoutes({ methods: [method], path, integration });
 };
 
 addRoute(api2.HttpMethod.GET, "/api/world", {
