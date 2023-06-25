@@ -363,3 +363,115 @@ new r53.ARecord(stack, "ARecord", {
   target: r53.RecordTarget.fromAlias(target),
 });
 ```
+
+## Even more
+
+With the infrastructure set up, we can focus on developer experience. I've opted to use Go for my backend and Vite for the frontend.
+
+### Backend
+
+Initialize your Go workspace.
+
+```bash
+go mod init github.com/example/project
+```
+
+For each of your handlers, create a file, e.g. `handlers/my_handler/main.go`
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+)
+
+func main() {
+	lambda.Start(Handler)
+}
+
+func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       "hello world",
+	}, nil
+}
+```
+
+You can now run `go mod tidy` to generate a `go.sum` file and download dependencies.
+
+Once you register your handlers within CDK, you can run `npx cdk synth` to render out a CloudFormation template. Using SAM CLI, we can run a local api based on this template which emulates API Gateway.
+
+```bash
+# synthesize the template
+npx cdk synth
+# register it as a script
+npm pkg set scripts."api:start"="sam local start-api --template ./cdk.out/MyStack.template.json --warm-containers EAGER --skip-pull-image"
+# execute it
+npm run api:start
+```
+
+Each time you synthesize the template, SAM will lazily hot-reload your handlers which is not ideal for a developer experience. However, we can use nodemon to trigger reloads whenever we make changes.
+
+```bash
+npm install nodemon
+# register as a script
+npm pkg set scripts."api:dev"="nodemon --exec \"npx cdk synth\" --watch \"pkg\" --watch \"handlers\" --ext \"go\" --delay 2000"
+# execute it
+npm run api:dev
+```
+
+### Frontend
+
+Initialize your Vite project.
+
+```bash
+npm create vite@latest ./ui -- --template react-swc-ts
+```
+
+Within your root `package.json`, add `./ui` as a workspace
+
+```json
+{
+  // ...
+  "workspaces": ["./ui"]
+  // ...
+}
+```
+
+Within `ui/vite.config.ts`, add a snippet to proxy your lambdas
+
+```typescript
+export default defineConfig({
+  // ...
+  server: {
+    proxy: {
+      "/api": "http://127.0.0.1:3000",
+    },
+  },
+  // ...
+});
+```
+
+Finally, add a script to execute the development server from the root
+
+```bash
+npm pkg set scripts."ui:dev"="npm -w ui run dev"
+```
+
+### Tying it all together
+
+To summarize, we've added a couple convenience scripts:
+
+- to launch an instance of SAM CLI local api which will serve our lambdas at their configured paths
+- to rebuild our template whenever we make a change to our backend code which will trigger the SAM local api server to rebuild our lambdas
+- to start the Vite development server
+
+To execute them all at the same time, we can use `concurrently`
+
+```bash
+npm install concurrently
+npm pkg set scripts.start="concurrently --kill-others \"npm:ui:dev\" \"npm:api:dev\" \"npm:api:start\""
+```
