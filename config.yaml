@@ -8,6 +8,10 @@ copyright: Hans Song - [GitHub](https://github.com/hans-m-song) - [LinkedIn](htt
 
 paginate: 5
 
+security:
+  gotemplates:
+    allowActionJSTmpl: true
+
 params:
   author: Hans Song
   description: Hans's blog
