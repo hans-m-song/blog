@@ -3,7 +3,6 @@ import "dotenv/config";
 
 import path from "path";
 import fs from "fs";
-
 import * as acm from "aws-cdk-lib/aws-certificatemanager";
 import * as cdk from "aws-cdk-lib";
 import * as cf from "aws-cdk-lib/aws-cloudfront";
