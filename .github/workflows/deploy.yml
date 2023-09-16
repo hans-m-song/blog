@@ -1,0 +1,54 @@
+name: Deploy Hugo site to Pages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on:
+      - self-hosted
+
+    steps:
+      - uses: axatol/actions/setup-hugo@release
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          show-progress: false
+
+      - id: pages
+        uses: actions/configure-pages@v3
+
+      - env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: make build
+
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+
+    runs-on:
+      - self-hosted
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v2
