@@ -73,10 +73,10 @@ _University of Queensland - Graduated 2021_
 
 Favourite courses include:
 
-- CSSE2310, - Computer Systems Principles and Programming
-- DECO3800, - Design Computing Studio 3 - Proposal
-- DECO3801, - Design Computing Studio 3 - Build
-- COMP4403, - Compilers and Interpreters
+- CSSE2310 - Computer Systems Principles and Programming
+- DECO3800 - Design Computing Studio 3 - Proposal
+- DECO3801 - Design Computing Studio 3 - Build
+- COMP4403 - Compilers and Interpreters
 
 ## Stuff I'm working on
 
