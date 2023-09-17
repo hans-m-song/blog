@@ -10,27 +10,24 @@ tags: []
 
 ## Skills
 
-### Languages and libraries
+### Languages and frameworks
 
-- JavaScript, TypeScript - React.js, Redux, Material UI, Jest, Playwright / Puppeteer, Axios
-- Go - Cobra, Viper, Zerolog, Chi
-- Python - Pip, Pipenv
+- JavaScript / TypeScript - Antd, Axios, Material UI, React.js, Vue.js, Jest, Playwright, Puppeteer
+- Go, - Chi, Zerolog
+- Python
 
-### Frameworks and tooling
+### Management and tooling
 
-- Development - Git, Bash
-- Testing - Jest, Playwright / Puppeteer
-- Project Management - GitHub, GitLab, Jira / Confluence
-- Databases - PostgreSQL, DynamoDB, MongoDB
-- CI / CD - Github Actions, Jenkins, Docker
-- IAC - AWS CloudFormation, AWS CDK, Kubectl, Helm, Terraform
-- Frontend - React.js, Redux, Material UI, Vue
+- Development - Bash, Git
+- Project Management - GitHub, GitLab, Jira, Confluence
+- Databases - AWS DynamoDB, PostgreSQL
+- CI / CD - Github Actions, Jenkins, Octopus Deploy
+- IAC - AWS CloudFormation, AWS CDK, Helm, Terraform
 
 ### Platforms and services
 
-- Hosted - AWS
-- Services - JFrog Artifactory, Snyk, Sendgrid
-- Bare metal - Kubernetes, Docker compose
+- Cloud - AWS
+- Platforms - AWS Lambda, Docker, Kubernetes
 - Observability - New Relic, Splunk
 
 ## Experience
@@ -53,7 +50,7 @@ _Nov 2021 - Oct 2022_
 
 ### Credfin - Software Engineer
 
-_Jan 2019 - Apr 2021_
+_Jan 2019 - Oct 2021_
 
 - Working and sometimes leading in a team utilising agile development principles
 - Migrating, maintaining, and extending customer facing products
@@ -76,22 +73,22 @@ _University of Queensland - Graduated 2021_
 
 Favourite courses include:
 
-- `CSSE2310` - Computer Systems Principles and Programming
-- `DECO3800` - Design Computing Studio 3 - Proposal
-- `DECO3801` - Design Computing Studio 3 - Build
-- `COMP4403` - Compilers and Interpreters
+- CSSE2310, - Computer Systems Principles and Programming
+- DECO3800, - Design Computing Studio 3 - Proposal
+- DECO3801, - Design Computing Studio 3 - Build
+- COMP4403, - Compilers and Interpreters
 
 ## Stuff I'm working on
 
 ### [huisheng](https://github.com/hans-m-song/huisheng) - _Discord bot_
 
-_TypeScript_
+_Kubernetes, Discord, TypeScript_
 
-What was originally just an experimental learning project for writing a bot became a full-featured Discord bot used regularly by two Discord servers. Primary feature is playing audio from YouTube. Automatically builds and rollouts the new image on push.
+What was originally just an experimental learning project for writing a bot became a full-featured Discord bot used regularly by two Discord servers. Primary feature is playing audio from YouTube. Automated CI/CD pipeline to build, push, notify, and rollout.
 
 ### [iac](https://github.com/hans-m-song/iac) - _IAC monorepo_
 
-_Terraform, TypeScript, AWS CDK, Helm_
+_AWS CDK, Helm, Terraform, TypeScript_
 
 One-stop-shop for all things IAC. Contains my definitions for AWS, GitHub, Auth0, and (soon to come), Kubernetes resources. Automatically deploys using GitHub Actions on push.
 

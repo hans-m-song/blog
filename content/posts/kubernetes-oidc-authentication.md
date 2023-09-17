@@ -19,15 +19,17 @@ You will need:
 
 ## Setup
 
-1. Create a machine-to-machine Auth0 Client (my Kubernetes cluster will be named "Glados", and hence, my client will be named accordingly). Take note of your client ID and client secret.
+1. Create a machine-to-machine Auth0 Client. Take note of your client ID and client secret.
+
+   In Terraform, it would look something like this:
 
    ```terraform
-   resource "auth0_client" "glados_cli" {
-    name           = "Glados (CLI)"
+   resource "auth0_client" "client" {
+    name           = "Client"
     app_type       = "non_interactive"
     is_first_party = true
     sso            = false
-    callbacks      = ["http://localhost:8000"]
+    callbacks      = ["http://localhost:8000"] # required for kubelogin
 
     grant_types = [
       "client_credentials",
@@ -51,7 +53,7 @@ You will need:
    - `oidc-username-prefix`
    - `oidc-groups-prefix`
 
-   When starting up a K3S master node (replace `${CLIENT_ID}`):
+   Hint - when starting up a K3S master node:
 
    ```bash
    curl -sfL https://get.k3s.io | INSTALL_K3S_CHANNEL=stable sh -s - \
@@ -92,4 +94,20 @@ You will need:
      --oidc-extra-scope="email"
    ```
 
-1. At this point, when you attempt a kubectl command, kubelogin should step in and prompt you to log into your Auth0 tenant. If you run into issues, make sure to check the server logs (e.g. `systemctl status k3s.service`).
+1. At this point, when you attempt a kubectl command, kubelogin should step in and prompt you to log into your Auth0 tenant. If you run into issues, make sure to check the server logs, e.g.
+
+   ```bash
+   systemctl status k3s.service
+   # OR
+   journalctl -xeu k3s.service
+   ```
+
+   Some errors I've encountered:
+
+   > Unable to authenticate the request" err="[invalid bearer token, oidc: verify token: oidc: expected audience \"xxx\" got [\"yyy\"]]"
+
+   - Ensure the audience given to the Kubernetes API server and configured in your kubeconfig matches the client ID in Auth0.
+
+   > Unable to authenticate the request" err="[invalid bearer token, oidc: parse username claims \"xxx\": claim not present]"
+
+   - Ensure the Auth0 client is allowed to provide the claim and add it to the Kubernetes user configuration with `--oidc-extra-scope="xxx"`
