@@ -17,7 +17,7 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { config } from "./config";
 
 const app = new cdk.App();
-const stack = new cdk.Stack(app, "BlogStack", { env: { region: "us-east-1" } });
+const stack = new cdk.Stack(app, "Blog", { env: { region: "us-east-1" } });
 
 const bucket = new s3.Bucket(stack, "Bucket", {
   encryption: s3.BucketEncryption.S3_MANAGED,
@@ -108,5 +108,3 @@ new r53.ARecord(stack, "ARecord", {
 });
 
 cdk.Tags.of(app).add("GitRepository", "https://github.com/hans-m-song/blog");
-cdk.Tags.of(app).add("Purpose", "Content");
-cdk.Tags.of(app).add("StackName", cdk.Fn.ref("AWS::StackName"));
