@@ -2,7 +2,6 @@
 title: "Kubernetes OIDC Authentication"
 date: 2023-09-16T15:36:47+10:00
 draft: false
-toc: true
 tags: [auth0, kubernetes, oidc, terraform, walkthrough]
 ---
 

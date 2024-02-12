@@ -2,7 +2,6 @@
 title: "Simple Serverless Site Boilerplate"
 date: 2023-06-25T10:47:44+10:00
 draft: false
-toc: true
 tags: [aws, cdk, serverless, walkthrough]
 ---
 
@@ -104,6 +103,8 @@ npm install --save-dev \
   prettier
 ```
 
+{{< collapse summary="Example .eslintrc.yml">}}
+
 ```yaml
 root: true
 
@@ -174,7 +175,7 @@ rules:
     - off
 ```
 
-</details>
+{{</ collapse >}}
 
 ## Configuration
 

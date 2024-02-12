@@ -2,7 +2,6 @@
 title: "About"
 date: 2023-05-22T19:05:10+10:00
 draft: false
-toc: false
 showDate: false
 norss: true
 tags: []

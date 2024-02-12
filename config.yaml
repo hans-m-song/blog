@@ -1,47 +1,93 @@
 baseURL: https://hsong.me/
+title: Hans Song
+paginate: 5
+theme: PaperMod
+
 languageCode: en-us
 defaultContentLanguage: en
-title: Hans Song
 
-theme: ficurinia
-copyright: Hans Song - [GitHub](https://github.com/hans-m-song) - [LinkedIn](https://www.linkedin.com/in/hans-song/)
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
 
-paginate: 5
+minify:
+  disableXML: true
+  minifyOutput: true
 
 security:
   gotemplates:
     allowActionJSTmpl: true
 
 params:
-  author: Hans Song
+  env: production
+  title: Hans Song
   description: Hans's blog
+  author: Hans Song
+  defaultTheme: auto
 
-  articleSummary: false
-  paperCards: true
-  buttonTags: true
-  tagsInArticleTitle: true
-  gridView: false
-  bigArticleTitle: false
-  navtype: standard
-  enableShadow: true
-  menuStyle: standard
-  inputStyle: standard
-  enableSearch: true
-  searchbarEverywhere: true
-  searchMenuLink: false
-  mobileHamburgerNav: true
-  enableFeatured: false
-  underlineTitleLinks: false
-  enableSidebarLayout: false
-  tocInSidebar: true
+  showReadingTime: true
+  showShareButtons: false
+  showPostNavLinks: true
+  showBreadCrumbs: true
+  showCodeCopyButtons: true
+  showWordCount: true
+  showRssButtonInSectionTermList: true
+  useHugoToc: true
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+  hideMeta: false
+  hideSummary: false
+  showToc: true
+  tocOpen: true
+
+  homeInfoParams:
+    title: Hi there
+    content: You've found my collection of random ramblings and boilerplate code
+
+  socialIcons:
+    - name: GitHub
+      url: https://github.com/hans-m-song
+    - name: LinkedIn
+      url: https://linkedin.com/in/hans-song
+
+  editPost:
+    URL: "https://github.com/hans-m-song/blog/blob/master/content"
+    Text: "Suggest Changes"
+    appendFilePath: true
+
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
+    keys: ["title", "permalink", "summary", "content"]
 
 menu:
-  icons:
-    - identifier: github
-      name: GitHub
-      url: https://github.com/hans-m-song
+  main:
+    - identifier: about
+      name: about
+      url: /pages/about/
       weight: 10
-    - identifier: linkedin
-      name: LinkedIn
-      url: https://www.linkedin.com/in/hans-song/
-      weight: 10
+    - identifier: resume
+      name: resume
+      url: /pages/resume/
+      weight: 11
+    - identifier: tags
+      name: tags
+      url: /tags/
+      weight: 20
+    - identifier: search
+      name: search
+      url: /search/
+      weight: 30
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON

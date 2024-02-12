@@ -2,7 +2,6 @@
 title: "Resume"
 date: 2023-05-28T00:00:10+10:00
 draft: false
-toc: true
 showDate: false
 norss: true
 tags: []
@@ -13,12 +12,13 @@ tags: []
 ### Languages and frameworks
 
 - JavaScript / TypeScript - Antd, Axios, Material UI, React.js, Vue.js, Jest, Playwright, Puppeteer
-- Go, - Chi, Zerolog
+- Go - Chi, Cobra, Zerolog
 - Python
+- Haskell (learning)
 
 ### Management and tooling
 
-- Development - Bash, Git
+- Development - Make, Git
 - Project Management - GitHub, GitLab, Jira, Confluence
 - Databases - AWS DynamoDB, PostgreSQL
 - CI / CD - Github Actions, Jenkins, Octopus Deploy
@@ -27,7 +27,7 @@ tags: []
 ### Platforms and services
 
 - Cloud - AWS
-- Platforms - AWS Lambda, Docker, Kubernetes
+- Platforms - Serverless, Docker, Kubernetes
 - Observability - New Relic, Splunk
 
 ## Experience
@@ -90,8 +90,4 @@ What was originally just an experimental learning project for writing a bot beca
 
 _AWS CDK, Helm, Terraform, TypeScript_
 
-One-stop-shop for all things IAC. Contains my definitions for AWS, GitHub, Auth0, and (soon to come), Kubernetes resources. Automatically deploys using GitHub Actions on push.
-
-### [kube-stack](https://github.com/hans-m-song/kube-stack) - _Kubernetes resources_
-
-Current place where resources deployed to my kubernetes cluster is stored defined using TypeScript and [CDK8S](https://cdk8s.io/). Soon to be moved into the IAC monorepo. Includes deployments for Minio, GitHub Actions Runner Controller, Media Centre (JellyFin + Lidarr, Sonarr, etc), New Relic, and more.
+One-stop-shop for all things IAC. Contains my definitions for AWS, GitHub, Auth0, and (soon to come), Kubernetes resources.

@@ -2,7 +2,6 @@
 title: "Setting Up a Hugo Blog"
 date: 2023-05-28T10:00:00+10:00
 draft: false
-toc: true
 tags: [aws, cdk, github-actions, hugo, walkthrough]
 ---
 
@@ -83,7 +82,6 @@ Before adding content, you can customize how new files are templated by modifyin
 title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 draft: true
-toc: true
 tags: []
 ---
 ```
